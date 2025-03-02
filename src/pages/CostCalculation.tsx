@@ -18,12 +18,16 @@ const CostCalculation = () => {
   const [internetInput, setInternetInput] = useState(
     formData.internetCost !== null ? formData.internetCost.toString() : ''
   );
+  const [heatingInput, setHeatingInput] = useState(
+    formData.heatingCost !== null ? formData.heatingCost.toString() : ''
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const electricityCost = parseFloat(electricityInput);
     const internetCost = parseFloat(internetInput);
+    const heatingCost = parseFloat(heatingInput);
     
     if (isNaN(electricityCost) || electricityCost < 0) {
       toast.error("Please enter a valid electricity cost");
@@ -35,9 +39,15 @@ const CostCalculation = () => {
       return;
     }
     
+    if (isNaN(heatingCost) || heatingCost < 0) {
+      toast.error("Please enter a valid heating cost");
+      return;
+    }
+    
     updateFormData({
       electricityCost,
-      internetCost
+      internetCost,
+      heatingCost
     });
     
     navigate('/results');
@@ -84,6 +94,27 @@ const CostCalculation = () => {
                 id="internet-cost"
                 value={internetInput}
                 onChange={(e) => setInternetInput(e.target.value)}
+                placeholder="0.00"
+                className="pl-7 text-lg py-6"
+                step="0.01"
+                min="0"
+              />
+            </div>
+          </div>
+          
+          <div className="space-y-4 pt-2">
+            <h3 className="text-xl font-medium">Annual Heating Cost</h3>
+            <p className="text-sm text-muted-foreground">How much do you spend on heating in a year?</p>
+            
+            <div className="relative mt-2">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span className="text-gray-500 sm:text-sm">$</span>
+              </div>
+              <Input
+                type="number"
+                id="heating-cost"
+                value={heatingInput}
+                onChange={(e) => setHeatingInput(e.target.value)}
                 placeholder="0.00"
                 className="pl-7 text-lg py-6"
                 step="0.01"

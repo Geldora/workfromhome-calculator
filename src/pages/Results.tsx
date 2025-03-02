@@ -17,7 +17,8 @@ const Results = () => {
       (formData.workedFromHome === null) || 
       (formData.workedFromHome === true && formData.daysPerWeek === null) ||
       formData.electricityCost === null || 
-      formData.internetCost === null
+      formData.internetCost === null ||
+      formData.heatingCost === null
     ) {
       toast.error("Please complete all steps before viewing results");
       navigate('/');
@@ -38,7 +39,8 @@ const Results = () => {
     formData.workedFromHome === null || 
     (formData.workedFromHome === true && formData.daysPerWeek === null) ||
     formData.electricityCost === null || 
-    formData.internetCost === null
+    formData.internetCost === null ||
+    formData.heatingCost === null
   ) {
     return null; // Will redirect due to useEffect
   }
@@ -49,7 +51,7 @@ const Results = () => {
       subtitle="Summary of your work habits and annual costs"
     >
       <div className="space-y-8">
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <InfoCard 
             title="Work From Home"
             value={formData.workedFromHome ? "Yes" : "No"}
@@ -69,6 +71,13 @@ const Results = () => {
             value={formatCurrency(formData.internetCost)}
             subtitle="Annual cost"
             label="Variable C"
+          />
+          
+          <InfoCard 
+            title="Heating"
+            value={formatCurrency(formData.heatingCost)}
+            subtitle="Annual cost"
+            label="Variable D"
           />
         </div>
 
