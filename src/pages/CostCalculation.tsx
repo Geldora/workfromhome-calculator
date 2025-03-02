@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormData } from '@/context/FormContext';
@@ -7,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { Euro } from 'lucide-react';
 
 const CostCalculation = () => {
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ const CostCalculation = () => {
             
             <div className="relative mt-2">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span className="text-gray-500 sm:text-sm">$</span>
+                <Euro className="h-4 w-4 text-gray-500" />
               </div>
               <Input
                 type="number"
@@ -87,7 +87,7 @@ const CostCalculation = () => {
             
             <div className="relative mt-2">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span className="text-gray-500 sm:text-sm">$</span>
+                <Euro className="h-4 w-4 text-gray-500" />
               </div>
               <Input
                 type="number"
@@ -108,7 +108,7 @@ const CostCalculation = () => {
             
             <div className="relative mt-2">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span className="text-gray-500 sm:text-sm">$</span>
+                <Euro className="h-4 w-4 text-gray-500" />
               </div>
               <Input
                 type="number"

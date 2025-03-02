@@ -16,6 +16,7 @@ const Results = () => {
     if (
       (formData.workedFromHome === null) || 
       (formData.workedFromHome === true && formData.daysPerWeek === null) ||
+      (formData.workedFromHome === true && formData.remoteAllowance === null) ||
       formData.electricityCost === null || 
       formData.internetCost === null ||
       formData.heatingCost === null
@@ -26,18 +27,45 @@ const Results = () => {
   }, [formData, navigate]);
 
   const formatCurrency = (amount: number | null) => {
-    if (amount === null) return '$0.00';
-    return new Intl.NumberFormat('en-US', { 
+    if (amount === null) return '€0.00';
+    return new Intl.NumberFormat('de-DE', { 
       style: 'currency', 
-      currency: 'USD',
+      currency: 'EUR',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2 
     }).format(amount);
   };
 
+  // Calculate the result using the formula ((Y x Z) ÷ W - M) x 30%
+  const calculateResult = () => {
+    if (
+      formData.workedFromHome === null || 
+      formData.electricityCost === null || 
+      formData.internetCost === null ||
+      formData.heatingCost === null ||
+      formData.remoteAllowance === null
+    ) {
+      return 0;
+    }
+
+    // If not worked from home, return 0
+    if (!formData.workedFromHome || formData.daysPerWeek === null || formData.daysPerWeek === 0) {
+      return 0;
+    }
+
+    const Y = formData.electricityCost + formData.internetCost + formData.heatingCost;
+    const Z = formData.daysPerWeek * 52;
+    const W = 365;
+    const M = formData.remoteAllowance;
+
+    const result = ((Y * Z) / W - M) * 0.3;
+    return Math.max(0, result); // Ensure the result is not negative
+  };
+
   if (
     formData.workedFromHome === null || 
     (formData.workedFromHome === true && formData.daysPerWeek === null) ||
+    (formData.workedFromHome === true && formData.remoteAllowance === null) ||
     formData.electricityCost === null || 
     formData.internetCost === null ||
     formData.heatingCost === null
@@ -51,7 +79,7 @@ const Results = () => {
       subtitle="Summary of your work habits and annual costs"
     >
       <div className="space-y-8">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <InfoCard 
             title="Work From Home"
             value={formData.workedFromHome ? "Yes" : "No"}
@@ -72,13 +100,41 @@ const Results = () => {
             subtitle="Annual cost"
             label="Variable C"
           />
-          
+        </div>
+        
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <InfoCard 
             title="Heating"
             value={formatCurrency(formData.heatingCost)}
             subtitle="Annual cost"
             label="Variable D"
           />
+          
+          {formData.workedFromHome && (
+            <InfoCard 
+              title="Remote Allowance"
+              value={formatCurrency(formData.remoteAllowance)}
+              subtitle="Received from employer"
+              label="Variable M"
+            />
+          )}
+          
+          <Card className="overflow-hidden border-2 border-primary/50 bg-primary/5">
+            <div className="bg-primary py-2 px-4 border-b text-xs font-mono text-primary-foreground">
+              CALCULATION RESULT
+            </div>
+            <div className="p-6 space-y-2">
+              <h4 className="text-sm font-medium text-muted-foreground">
+                ((B+C+D) × (A×52)) ÷ 365 - M) × 30%
+              </h4>
+              <p className="text-2xl font-medium">
+                {formatCurrency(calculateResult())}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Calculated tax deduction
+              </p>
+            </div>
+          </Card>
         </div>
 
         <div className="pt-8 flex justify-between">

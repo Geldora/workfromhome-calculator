@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 type FormData = {
@@ -6,6 +7,7 @@ type FormData = {
   electricityCost: number | null;
   internetCost: number | null;
   heatingCost: number | null;
+  remoteAllowance: number | null;
 };
 
 type FormContextType = {
@@ -20,6 +22,7 @@ const initialFormData: FormData = {
   electricityCost: null,
   internetCost: null,
   heatingCost: null,
+  remoteAllowance: null,
 };
 
 const FormContext = createContext<FormContextType | undefined>(undefined);

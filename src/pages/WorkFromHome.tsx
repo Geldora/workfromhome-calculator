@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormData } from '@/context/FormContext';
 import Layout from '@/components/Layout';
@@ -8,11 +8,16 @@ import { Card } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { Euro } from 'lucide-react';
 
 const WorkFromHome = () => {
   const navigate = useNavigate();
   const { formData, updateFormData } = useFormData();
+  const [allowanceInput, setAllowanceInput] = useState(
+    formData.remoteAllowance !== null ? formData.remoteAllowance.toString() : ''
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +30,19 @@ const WorkFromHome = () => {
     if (formData.workedFromHome && formData.daysPerWeek === null) {
       toast.error("Please select how many days per week you worked from home");
       return;
+    }
+
+    if (formData.workedFromHome) {
+      const remoteAllowance = parseFloat(allowanceInput);
+      
+      if (isNaN(remoteAllowance) || remoteAllowance < 0) {
+        toast.error("Please enter a valid remote working allowance amount");
+        return;
+      }
+
+      updateFormData({ remoteAllowance });
+    } else {
+      updateFormData({ remoteAllowance: 0 });
     }
     
     navigate('/costs');
@@ -119,6 +137,27 @@ const WorkFromHome = () => {
                   <span className="font-medium text-2xl">{formData.daysPerWeek}</span> days per week
                 </p>
               )}
+            </div>
+
+            <div className="space-y-4 pt-4 animate-slide-up">
+              <h3 className="text-xl font-medium">How much remote working allowance did you receive from your employer?</h3>
+              <p className="text-sm text-muted-foreground">Enter the total amount received for 2024</p>
+              
+              <div className="relative mt-2">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Euro className="h-4 w-4 text-gray-500" />
+                </div>
+                <Input
+                  type="number"
+                  id="remote-allowance"
+                  value={allowanceInput}
+                  onChange={(e) => setAllowanceInput(e.target.value)}
+                  placeholder="0.00"
+                  className="pl-9 text-lg py-6"
+                  step="0.01"
+                  min="0"
+                />
+              </div>
             </div>
           </div>
         )}
