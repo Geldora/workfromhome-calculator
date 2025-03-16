@@ -1,11 +1,10 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 220 33% 98%;
+    --background: 150 33% 98%;
     --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
@@ -14,7 +13,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 210 100% 50%;
+    --primary: 152 63% 25%;
     --primary-foreground: 0 0% 98%;
 
     --secondary: 240 5% 96%;
@@ -23,47 +22,47 @@
     --muted: 240 5% 96%;
     --muted-foreground: 240 4% 46.1%;
 
-    --accent: 210 100% 97%;
-    --accent-foreground: 210 100% 40%;
+    --accent: 28 96% 55%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 210 100% 50%;
+    --ring: 152 63% 25%;
 
     --radius: 0.75rem;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 152 35% 8%;
     --foreground: 0 0% 98%;
 
-    --card: 240 10% 3.9%;
+    --card: 152 35% 10%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 240 10% 3.9%;
+    --popover: 152 35% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 210 100% 50%;
+    --primary: 152 63% 40%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 240 3.7% 15.9%;
+    --secondary: 152 25% 15%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 240 3.7% 15.9%;
+    --muted: 152 25% 15%;
     --muted-foreground: 240 5% 64.9%;
 
-    --accent: 240 3.7% 15.9%;
+    --accent: 28 96% 55%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --border: 152 25% 20%;
+    --input: 152 25% 20%;
+    --ring: 152 63% 40%;
   }
 }
 
@@ -78,7 +77,7 @@
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-medium tracking-tight;
+    @apply font-bold tracking-tight text-emerald-950 dark:text-emerald-50;
   }
   
   h1 {
@@ -115,5 +114,15 @@
   
   .page-transition-exit-active {
     @apply opacity-0 translate-y-1 transition-all duration-200 ease-in;
+  }
+}
+
+@layer components {
+  .card-gradient {
+    @apply bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/50 dark:to-emerald-800/50;
+  }
+  
+  .accent-gradient {
+    @apply bg-gradient-to-r from-orange-500 to-amber-500;
   }
 }

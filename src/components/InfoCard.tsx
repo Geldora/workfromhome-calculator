@@ -10,15 +10,15 @@ interface InfoCardProps {
 }
 
 const InfoCard = ({ title, value, subtitle, label }: InfoCardProps) => (
-  <Card className="overflow-hidden">
-    <div className="bg-primary/10 py-2 px-4 border-b text-xs font-mono text-primary-foreground/70">
+  <Card className="overflow-hidden border-2 border-emerald-700/20 shadow-md transition-all hover:shadow-lg">
+    <div className="bg-emerald-800 py-2 px-4 border-b text-xs font-mono text-emerald-50">
       {label}
     </div>
     <div className="p-6 space-y-2">
       <h4 className="text-sm font-medium text-muted-foreground">
         {title}
       </h4>
-      <p className="text-2xl font-medium">
+      <p className="text-2xl font-bold text-emerald-900 dark:text-emerald-400">
         {value}
       </p>
       <p className="text-sm text-muted-foreground">
