@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormData } from '@/context/FormContext';
@@ -33,7 +32,7 @@ const WorkFromHome = () => {
     }
 
     if (formData.workedFromHome) {
-      const remoteAllowance = parseFloat(allowanceInput);
+      const remoteAllowance = allowanceInput === '' ? 0 : parseFloat(allowanceInput);
       
       if (isNaN(remoteAllowance) || remoteAllowance < 0) {
         toast.error("Please enter a valid remote working allowance amount");

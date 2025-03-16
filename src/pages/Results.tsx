@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormData } from '@/context/FormContext';
@@ -15,15 +14,12 @@ const Results = () => {
   
   useEffect(() => {
     // Check if user has completed the forms
+    // Only required fields are workedFromHome and daysPerWeek if workedFromHome is true
     if (
       (formData.workedFromHome === null) || 
-      (formData.workedFromHome === true && formData.daysPerWeek === null) ||
-      (formData.workedFromHome === true && formData.remoteAllowance === null) ||
-      formData.electricityCost === null || 
-      formData.internetCost === null ||
-      formData.heatingCost === null
+      (formData.workedFromHome === true && formData.daysPerWeek === null)
     ) {
-      toast.error("Please complete all steps before viewing results");
+      toast.error("Please complete all required steps before viewing results");
       navigate('/');
     }
   }, [formData, navigate]);
@@ -40,13 +36,7 @@ const Results = () => {
 
   // Calculate the result using the formula ((Y x Z) ÷ W - M) x 30%
   const calculateResult = () => {
-    if (
-      formData.workedFromHome === null || 
-      formData.electricityCost === null || 
-      formData.internetCost === null ||
-      formData.heatingCost === null ||
-      formData.remoteAllowance === null
-    ) {
+    if (formData.workedFromHome === null) {
       return 0;
     }
 
@@ -55,10 +45,16 @@ const Results = () => {
       return 0;
     }
 
-    const Y = formData.electricityCost + formData.internetCost + formData.heatingCost;
+    // Ensure all cost values are at least 0 (not null)
+    const electricityCost = formData.electricityCost ?? 0;
+    const internetCost = formData.internetCost ?? 0;
+    const heatingCost = formData.heatingCost ?? 0;
+    const remoteAllowance = formData.remoteAllowance ?? 0;
+
+    const Y = electricityCost + internetCost + heatingCost;
     const Z = formData.daysPerWeek * 52;
     const W = 365;
-    const M = formData.remoteAllowance;
+    const M = remoteAllowance;
 
     const result = ((Y * Z) / W - M) * 0.3;
     return Math.max(0, result); // Ensure the result is not negative
@@ -85,11 +81,7 @@ const Results = () => {
 
   if (
     formData.workedFromHome === null || 
-    (formData.workedFromHome === true && formData.daysPerWeek === null) ||
-    (formData.workedFromHome === true && formData.remoteAllowance === null) ||
-    formData.electricityCost === null || 
-    formData.internetCost === null ||
-    formData.heatingCost === null
+    (formData.workedFromHome === true && formData.daysPerWeek === null)
   ) {
     return null; // Will redirect due to useEffect
   }

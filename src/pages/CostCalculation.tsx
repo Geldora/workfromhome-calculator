@@ -25,21 +25,21 @@ const CostCalculation = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const electricityCost = parseFloat(electricityInput);
-    const internetCost = parseFloat(internetInput);
-    const heatingCost = parseFloat(heatingInput);
+    const electricityCost = electricityInput === '' ? 0 : parseFloat(electricityInput);
+    const internetCost = internetInput === '' ? 0 : parseFloat(internetInput);
+    const heatingCost = heatingInput === '' ? 0 : parseFloat(heatingInput);
     
-    if (isNaN(electricityCost) || electricityCost < 0) {
+    if (electricityInput !== '' && (isNaN(electricityCost) || electricityCost < 0)) {
       toast.error("Please enter a valid electricity cost");
       return;
     }
     
-    if (isNaN(internetCost) || internetCost < 0) {
+    if (internetInput !== '' && (isNaN(internetCost) || internetCost < 0)) {
       toast.error("Please enter a valid internet cost");
       return;
     }
     
-    if (isNaN(heatingCost) || heatingCost < 0) {
+    if (heatingInput !== '' && (isNaN(heatingCost) || heatingCost < 0)) {
       toast.error("Please enter a valid heating cost");
       return;
     }
