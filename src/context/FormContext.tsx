@@ -1,7 +1,7 @@
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-type FormData = {
+export type FormData = {
   workedFromHome: boolean | null;
   daysPerWeek: number | null;
   electricityCost: number | null;

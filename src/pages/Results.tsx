@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormData } from '@/context/FormContext';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { Copy, Check } from 'lucide-react';
+import InfoCard from '@/components/InfoCard';
+import ResultCard from '@/components/ResultCard';
+import { formatCurrency, calculateResult } from '@/utils/calculationUtils';
 
 const Results = () => {
   const navigate = useNavigate();
   const { formData } = useFormData();
-  const [copied, setCopied] = useState(false);
   
   useEffect(() => {
     // Check if user has completed the forms
@@ -24,67 +25,14 @@ const Results = () => {
     }
   }, [formData, navigate]);
 
-  const formatCurrency = (amount: number | null) => {
-    if (amount === null) return '€0.00';
-    return new Intl.NumberFormat('de-DE', { 
-      style: 'currency', 
-      currency: 'EUR',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2 
-    }).format(amount);
-  };
-
-  // Calculate the result using the formula ((Y x Z) ÷ W - M) x 30%
-  const calculateResult = () => {
-    if (formData.workedFromHome === null) {
-      return 0;
-    }
-
-    // If not worked from home, return 0
-    if (!formData.workedFromHome || formData.daysPerWeek === null || formData.daysPerWeek === 0) {
-      return 0;
-    }
-
-    // Ensure all cost values are at least 0 (not null)
-    const electricityCost = formData.electricityCost ?? 0;
-    const internetCost = formData.internetCost ?? 0;
-    const heatingCost = formData.heatingCost ?? 0;
-    const remoteAllowance = formData.remoteAllowance ?? 0;
-
-    const Y = electricityCost + internetCost + heatingCost;
-    const Z = formData.daysPerWeek * 52;
-    const W = 365;
-    const M = remoteAllowance;
-
-    const result = ((Y * Z) / W - M) * 0.3;
-    return Math.max(0, result); // Ensure the result is not negative
-  };
-
-  const copyToClipboard = () => {
-    const result = calculateResult();
-    const formattedResult = formatCurrency(result);
-    
-    navigator.clipboard.writeText(formattedResult)
-      .then(() => {
-        setCopied(true);
-        toast.success("Result copied to clipboard");
-        
-        // Reset the copied state after 2 seconds
-        setTimeout(() => {
-          setCopied(false);
-        }, 2000);
-      })
-      .catch(() => {
-        toast.error("Failed to copy result");
-      });
-  };
-
   if (
     formData.workedFromHome === null || 
     (formData.workedFromHome === true && formData.daysPerWeek === null)
   ) {
     return null; // Will redirect due to useEffect
   }
+
+  const result = calculateResult(formData);
 
   return (
     <Layout 
@@ -132,31 +80,10 @@ const Results = () => {
             />
           )}
           
-          <Card className="overflow-hidden border-2 border-primary/50 bg-primary/5">
-            <div className="bg-primary py-2 px-4 border-b text-xs font-mono text-primary-foreground flex items-center justify-between">
-              <span>CALCULATION RESULT</span>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-5 w-5" 
-                onClick={copyToClipboard}
-                title="Copy result to clipboard"
-              >
-                {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-              </Button>
-            </div>
-            <div className="p-6 space-y-2">
-              <h4 className="text-sm font-medium text-muted-foreground">
-                ((B+C+D) × (A×52)) ÷ 365 - M) × 30%
-              </h4>
-              <p className="text-2xl font-medium">
-                {formatCurrency(calculateResult())}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Calculated tax deduction
-              </p>
-            </div>
-          </Card>
+          <ResultCard 
+            result={result}
+            formatCurrency={formatCurrency}
+          />
         </div>
 
         <div className="pt-8 flex justify-between">
@@ -181,31 +108,5 @@ const Results = () => {
     </Layout>
   );
 };
-
-interface InfoCardProps {
-  title: string;
-  value: string;
-  subtitle: string;
-  label: string;
-}
-
-const InfoCard = ({ title, value, subtitle, label }: InfoCardProps) => (
-  <Card className="overflow-hidden">
-    <div className="bg-primary/10 py-2 px-4 border-b text-xs font-mono text-primary-foreground/70">
-      {label}
-    </div>
-    <div className="p-6 space-y-2">
-      <h4 className="text-sm font-medium text-muted-foreground">
-        {title}
-      </h4>
-      <p className="text-2xl font-medium">
-        {value}
-      </p>
-      <p className="text-sm text-muted-foreground">
-        {subtitle}
-      </p>
-    </div>
-  </Card>
-);
 
 export default Results;
