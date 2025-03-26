@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Calendar } from '@/components/ui/calendar';
 import YearSelector from './YearSelector';
 import InfoCard from './InfoCard';
 import { 
@@ -11,17 +10,11 @@ import {
   getIrishPublicHolidays,
   IrishPublicHoliday 
 } from '@/utils/workingDaysUtils';
-import { 
-  Popover,
-  PopoverContent,
-  PopoverTrigger 
-} from '@/components/ui/popover';
-import { Calendar as CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 
 const WorkingDaysCalculator = () => {
   const [selectedYear, setSelectedYear] = useState<number>(2024);
-  const [vacationDays, setVacationDays] = useState<Date[]>([]);
+  const [vacationDays, setVacationDays] = useState<number>(0);
   const [publicHolidays, setPublicHolidays] = useState<IrishPublicHoliday[]>([]);
   const [yearBreakdown, setYearBreakdown] = useState<{
     totalDays: number;
@@ -37,10 +30,10 @@ const WorkingDaysCalculator = () => {
     setPublicHolidays(holidays);
     
     // Reset vacation days when year changes
-    setVacationDays([]);
+    setVacationDays(0);
     
     // Calculate year breakdown
-    const breakdown = getYearBreakdown(selectedYear, []);
+    const breakdown = getYearBreakdown(selectedYear, vacationDays);
     setYearBreakdown(breakdown);
   }, [selectedYear]);
 
@@ -50,25 +43,20 @@ const WorkingDaysCalculator = () => {
     setYearBreakdown(breakdown);
   }, [vacationDays, selectedYear]);
 
-  // Handle adding vacation days
-  const handleAddVacation = (date: Date | undefined) => {
-    if (!date) return;
-
-    // Check if the date is already in the vacation days
-    const alreadyExists = vacationDays.some(
-      (d) => d.toDateString() === date.toDateString()
-    );
-
-    if (!alreadyExists) {
-      setVacationDays([...vacationDays, date]);
+  // Handle updating vacation days
+  const handleVacationDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (isNaN(value) || value < 0) {
+      setVacationDays(0);
+    } else {
+      // Ensure vacation days are not more than potential working days
+      if (yearBreakdown) {
+        const potentialWorkingDays = yearBreakdown.totalDays - yearBreakdown.weekendDays - yearBreakdown.publicHolidays;
+        setVacationDays(Math.min(value, potentialWorkingDays));
+      } else {
+        setVacationDays(value);
+      }
     }
-  };
-
-  // Handle removing vacation days
-  const handleRemoveVacation = (dateToRemove: Date) => {
-    setVacationDays(
-      vacationDays.filter((date) => date.toDateString() !== dateToRemove.toDateString())
-    );
   };
 
   return (
@@ -86,39 +74,19 @@ const WorkingDaysCalculator = () => {
             onChange={setSelectedYear} 
           />
           
-          <div className="mt-6">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  <span>Add vacation days</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  onSelect={handleAddVacation}
-                  disabled={(date) => {
-                    // Disable weekends and public holidays
-                    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                    const isHoliday = publicHolidays.some(
-                      (holiday) => 
-                        holiday.date.getDate() === date.getDate() && 
-                        holiday.date.getMonth() === date.getMonth()
-                    );
-                    
-                    // Also disable dates outside the selected year
-                    const isWrongYear = date.getFullYear() !== selectedYear;
-                    
-                    return isWeekend || isHoliday || isWrongYear;
-                  }}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+          <div className="mt-6 space-y-2">
+            <label htmlFor="vacationDays" className="block text-sm font-medium">
+              Vacation Days
+            </label>
+            <Input
+              id="vacationDays"
+              type="number"
+              min="0"
+              value={vacationDays}
+              onChange={handleVacationDaysChange}
+              className="w-full"
+              placeholder="Enter number of vacation days"
+            />
           </div>
         </Card>
         
@@ -144,6 +112,12 @@ const WorkingDaysCalculator = () => {
                 label="Holidays"
               />
               <InfoCard
+                title="Vacation Days"
+                value={yearBreakdown.vacationDays.toString()}
+                subtitle="Your time off from work"
+                label="Personal"
+              />
+              <InfoCard
                 title="Working Days"
                 value={yearBreakdown.workingDays.toString()}
                 subtitle="Business days in Ireland"
@@ -153,31 +127,6 @@ const WorkingDaysCalculator = () => {
           )}
         </div>
       </div>
-      
-      {/* Vacation days list */}
-      {vacationDays.length > 0 && (
-        <Card className="p-6 space-y-4">
-          <h3 className="text-lg font-medium">Your Vacation Days ({vacationDays.length})</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-            {vacationDays.map((date) => (
-              <div 
-                key={date.toISOString()} 
-                className="flex items-center justify-between p-2 bg-muted/50 rounded-md"
-              >
-                <span>{format(date, 'MMMM d, yyyy')}</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleRemoveVacation(date)}
-                  className="h-8 w-8 p-0"
-                >
-                  ✕
-                </Button>
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
       
       {/* Public holidays list */}
       <Card className="p-6 space-y-4">

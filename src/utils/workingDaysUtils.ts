@@ -1,4 +1,3 @@
-
 import { isWeekend, isWithinInterval } from 'date-fns';
 
 export type IrishPublicHoliday = {
@@ -83,9 +82,10 @@ export const getIrishPublicHolidays = (year: number): IrishPublicHoliday[] => {
   });
 };
 
+// Function to calculate working days with numeric vacation days
 export const calculateWorkingDays = (
   year: number,
-  vacationDays: Date[] = []
+  vacationDays: number = 0
 ): number => {
   const startDate = new Date(year, 0, 1); // January 1st of the selected year
   const endDate = new Date(year, 11, 31); // December 31st of the selected year
@@ -105,16 +105,8 @@ export const calculateWorkingDays = (
           holiday.date.getMonth() === currentDate.getMonth()
       );
       
-      // Check if it's a vacation day
-      const isVacationDay = vacationDays.some(
-        vacation => 
-          vacation.getDate() === currentDate.getDate() && 
-          vacation.getMonth() === currentDate.getMonth() && 
-          vacation.getFullYear() === currentDate.getFullYear()
-      );
-      
-      // If it's not a weekend, public holiday, or vacation, count it as a working day
-      if (!isPublicHoliday && !isVacationDay) {
+      // If it's not a weekend or public holiday, count it as a working day
+      if (!isPublicHoliday) {
         workingDays++;
       }
     }
@@ -123,7 +115,8 @@ export const calculateWorkingDays = (
     currentDate.setDate(currentDate.getDate() + 1);
   }
   
-  return workingDays;
+  // Subtract vacation days from working days
+  return Math.max(0, workingDays - vacationDays);
 };
 
 // Function to get the total number of days in a year
@@ -131,8 +124,8 @@ export const getTotalDaysInYear = (year: number): number => {
   return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 366 : 365;
 };
 
-// Function to get counts for each category of days
-export const getYearBreakdown = (year: number, vacationDays: Date[] = []): {
+// Function to get counts for each category of days with numeric vacation days
+export const getYearBreakdown = (year: number, vacationDays: number = 0): {
   totalDays: number;
   weekendDays: number;
   publicHolidays: number;
@@ -147,7 +140,6 @@ export const getYearBreakdown = (year: number, vacationDays: Date[] = []): {
   
   let weekendDays = 0;
   let publicHolidayCount = 0;
-  let vacationDaysCount = 0;
   
   const currentDate = new Date(startDate);
   
@@ -170,30 +162,24 @@ export const getYearBreakdown = (year: number, vacationDays: Date[] = []): {
       publicHolidayCount++;
     }
     
-    // Check if it's a vacation day (not on a weekend or public holiday)
-    const isVacationDay = vacationDays.some(
-      vacation => 
-        vacation.getDate() === currentDate.getDate() && 
-        vacation.getMonth() === currentDate.getMonth() && 
-        vacation.getFullYear() === currentDate.getFullYear()
-    );
-    
-    if (isVacationDay && !isWeekendDay && !matchingHoliday) {
-      vacationDaysCount++;
-    }
-    
     // Move to the next day
     currentDate.setDate(currentDate.getDate() + 1);
   }
   
-  // Calculate working days
-  const workingDays = totalDays - weekendDays - publicHolidayCount - vacationDaysCount;
+  // Calculate potential working days (before subtracting vacation)
+  const potentialWorkingDays = totalDays - weekendDays - publicHolidayCount;
+  
+  // Ensure vacation days don't exceed potential working days
+  const adjustedVacationDays = Math.min(vacationDays, potentialWorkingDays);
+  
+  // Calculate actual working days after subtracting vacation days
+  const workingDays = potentialWorkingDays - adjustedVacationDays;
   
   return {
     totalDays,
     weekendDays,
     publicHolidays: publicHolidayCount,
-    vacationDays: vacationDaysCount,
+    vacationDays: adjustedVacationDays,
     workingDays
   };
 };
