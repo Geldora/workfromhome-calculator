@@ -16,6 +16,7 @@ const Layout = ({ children, title, subtitle }: LayoutProps) => {
     { path: '/', label: 'Work Habits' },
     { path: '/costs', label: 'Annual Costs' },
     { path: '/results', label: 'Results' },
+    { path: '/working-days', label: 'Working Days' },
   ];
 
   return (
