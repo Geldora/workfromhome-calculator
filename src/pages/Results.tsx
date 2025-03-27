@@ -47,6 +47,15 @@ const Results = () => {
             subtitle={formData.workedFromHome ? `${formData.daysPerWeek} days per week` : "Not applicable"}
             label="Days Per Week"
           />
+          
+          {formData.workedFromHome && formData.workingDays !== null && (
+            <InfoCard 
+              title="Working Days"
+              value={`${formData.workingDays}`}
+              subtitle="Total working days in the tax year"
+              label="Working Days"
+            />
+          )}
 
           <InfoCard 
             title="Electricity"
@@ -54,16 +63,16 @@ const Results = () => {
             subtitle="Annual cost"
             label="Electricity Cost"
           />
-          
+        </div>
+        
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <InfoCard 
             title="Internet"
             value={formatCurrency(formData.internetCost)}
             subtitle="Annual cost"
             label="Internet Cost"
           />
-        </div>
-        
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          
           <InfoCard 
             title="Heating"
             value={formatCurrency(formData.heatingCost)}
@@ -79,11 +88,15 @@ const Results = () => {
               label="Remote Allowance"
             />
           )}
-          
-          <ResultCard 
-            result={result}
-            formatCurrency={formatCurrency}
-          />
+        </div>
+        
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="md:col-span-2 lg:col-span-3">
+            <ResultCard 
+              result={result}
+              formatCurrency={formatCurrency}
+            />
+          </div>
         </div>
 
         <div className="pt-8 flex justify-between">

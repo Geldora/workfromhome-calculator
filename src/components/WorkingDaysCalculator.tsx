@@ -12,9 +12,21 @@ import {
 } from '@/utils/workingDaysUtils';
 import { format } from 'date-fns';
 
-const WorkingDaysCalculator = () => {
-  const [selectedYear, setSelectedYear] = useState<number>(2024);
-  const [vacationDays, setVacationDays] = useState<number>(0);
+interface WorkingDaysCalculatorProps {
+  onYearChange?: (year: number) => void;
+  onVacationDaysChange?: (days: number) => void;
+  initialYear?: number;
+  initialVacationDays?: number;
+}
+
+const WorkingDaysCalculator = ({
+  onYearChange,
+  onVacationDaysChange,
+  initialYear = 2024,
+  initialVacationDays = 0
+}: WorkingDaysCalculatorProps) => {
+  const [selectedYear, setSelectedYear] = useState<number>(initialYear);
+  const [vacationDays, setVacationDays] = useState<number>(initialVacationDays);
   const [publicHolidays, setPublicHolidays] = useState<IrishPublicHoliday[]>([]);
   const [yearBreakdown, setYearBreakdown] = useState<{
     totalDays: number;
@@ -29,19 +41,26 @@ const WorkingDaysCalculator = () => {
     const holidays = getIrishPublicHolidays(selectedYear);
     setPublicHolidays(holidays);
     
-    // Reset vacation days when year changes
-    setVacationDays(0);
-    
     // Calculate year breakdown
     const breakdown = getYearBreakdown(selectedYear, vacationDays);
     setYearBreakdown(breakdown);
-  }, [selectedYear]);
+
+    // Call parent callback if provided
+    if (onYearChange) {
+      onYearChange(selectedYear);
+    }
+  }, [selectedYear, onYearChange]);
 
   // Update year breakdown when vacation days change
   useEffect(() => {
     const breakdown = getYearBreakdown(selectedYear, vacationDays);
     setYearBreakdown(breakdown);
-  }, [vacationDays, selectedYear]);
+
+    // Call parent callback if provided
+    if (onVacationDaysChange) {
+      onVacationDaysChange(vacationDays);
+    }
+  }, [vacationDays, selectedYear, onVacationDaysChange]);
 
   // Handle updating vacation days
   const handleVacationDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +90,9 @@ const WorkingDaysCalculator = () => {
           
           <YearSelector 
             selectedYear={selectedYear} 
-            onChange={setSelectedYear} 
+            onChange={(year) => {
+              setSelectedYear(year);
+            }} 
           />
           
           <div className="mt-6 space-y-2">

@@ -47,7 +47,7 @@ const ResultCard = ({ result, formatCurrency }: ResultCardProps) => {
       </div>
       <div className="p-6 space-y-2">
         <h4 className="text-sm font-medium text-muted-foreground">
-          ((Electricity + Internet + Heating) × (Days per week × 52)) ÷ 365 - Remote Allowance) × 30%
+          ((Electricity + Internet + Heating) × Working Days) ÷ 365 - Remote Allowance) × 30%
         </h4>
         <p className="text-2xl font-medium">
           {formatCurrency(result)}

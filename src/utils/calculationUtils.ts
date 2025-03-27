@@ -11,14 +11,14 @@ export const formatCurrency = (amount: number | null) => {
   }).format(amount);
 };
 
-// Calculate the result using the formula ((Y x Z) ÷ W - M) x 30%
+// Calculate the result using the formula ((Costs × Working Days) ÷ 365 - Remote Allowance) × 30%
 export const calculateResult = (formData: FormData) => {
   if (formData.workedFromHome === null) {
     return 0;
   }
 
   // If not worked from home, return 0
-  if (!formData.workedFromHome || formData.daysPerWeek === null || formData.daysPerWeek === 0) {
+  if (!formData.workedFromHome) {
     return 0;
   }
 
@@ -27,12 +27,14 @@ export const calculateResult = (formData: FormData) => {
   const internetCost = formData.internetCost ?? 0;
   const heatingCost = formData.heatingCost ?? 0;
   const remoteAllowance = formData.remoteAllowance ?? 0;
+  
+  // Use working days if available, otherwise fallback to calculation based on days per week
+  const workingDays = formData.workingDays ?? 
+    (formData.daysPerWeek ? formData.daysPerWeek * 52 : 0);
 
-  const Y = electricityCost + internetCost + heatingCost;
-  const Z = formData.daysPerWeek * 52;
-  const W = 365;
-  const M = remoteAllowance;
+  const costs = electricityCost + internetCost + heatingCost;
 
-  const result = ((Y * Z) / W - M) * 0.3;
+  // New formula: ((Costs × Working Days) ÷ 365 - Remote Allowance) × 30%
+  const result = ((costs * workingDays) / 365 - remoteAllowance) * 0.3;
   return Math.max(0, result); // Ensure the result is not negative
 };

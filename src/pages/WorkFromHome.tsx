@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormData } from '@/context/FormContext';
 import Layout from '@/components/Layout';
@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { Euro, CalendarDays } from 'lucide-react';
 import WorkingDaysCalculator from '@/components/WorkingDaysCalculator';
+import { getYearBreakdown } from '@/utils/workingDaysUtils';
 
 const WorkFromHome = () => {
   const navigate = useNavigate();
@@ -19,6 +20,16 @@ const WorkFromHome = () => {
   const [allowanceInput, setAllowanceInput] = useState(
     formData.remoteAllowance !== null ? formData.remoteAllowance.toString() : ''
   );
+  const [vacationDays, setVacationDays] = useState(0);
+  const [selectedYear, setSelectedYear] = useState(2024);
+
+  // Update working days when calculator values change
+  useEffect(() => {
+    if (formData.workedFromHome) {
+      const yearBreakdown = getYearBreakdown(selectedYear, vacationDays);
+      updateFormData({ workingDays: yearBreakdown.workingDays });
+    }
+  }, [selectedYear, vacationDays, formData.workedFromHome, updateFormData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,22 +53,37 @@ const WorkFromHome = () => {
       }
 
       updateFormData({ remoteAllowance });
+      
+      // Ensure working days is set
+      const yearBreakdown = getYearBreakdown(selectedYear, vacationDays);
+      updateFormData({ workingDays: yearBreakdown.workingDays });
     } else {
-      updateFormData({ remoteAllowance: 0 });
+      updateFormData({ 
+        remoteAllowance: 0,
+        workingDays: 0
+      });
     }
     
     navigate('/costs');
   };
 
+  const handleYearChange = (year: number) => {
+    setSelectedYear(year);
+  };
+
+  const handleVacationDaysChange = (days: number) => {
+    setVacationDays(days);
+  };
+
   return (
     <Layout 
       title="Work Habits" 
-      subtitle="Tell us about your work-from-home situation in 2024"
+      subtitle="Tell us about your work-from-home situation"
     >
       <div className="space-y-12">
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-4">
-            <h3 className="text-xl font-medium">Did you work from home in 2024?</h3>
+            <h3 className="text-xl font-medium">Did you work from home in the past tax year?</h3>
             
             <RadioGroup 
               value={formData.workedFromHome === null ? undefined : formData.workedFromHome.toString()} 
@@ -83,7 +109,7 @@ const WorkFromHome = () => {
                   >
                     <span className="text-lg font-medium">Yes</span>
                     <span className="text-sm text-muted-foreground text-center">
-                      I worked from home for some or all of 2024
+                      I worked from home for some or all of the past tax year
                     </span>
                   </Label>
                 </Card>
@@ -105,7 +131,7 @@ const WorkFromHome = () => {
                   >
                     <span className="text-lg font-medium">No</span>
                     <span className="text-sm text-muted-foreground text-center">
-                      I worked exclusively at my workplace in 2024
+                      I worked exclusively at my workplace in the past tax year
                     </span>
                   </Label>
                 </Card>
@@ -114,8 +140,26 @@ const WorkFromHome = () => {
           </div>
 
           {formData.workedFromHome && (
-            <div className="space-y-4 pt-4 animate-slide-up">
-              <h3 className="text-xl font-medium">How many days per week did you typically work from home?</h3>
+            <div className="space-y-6 pt-4 animate-slide-up">
+              {/* Working Days Calculator Section - Show first when "Yes" is selected */}
+              <div className="border-b border-border pb-6">
+                <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+                  <CalendarDays className="h-5 w-5" />
+                  Calculate Your Working Days
+                </h2>
+                <p className="text-muted-foreground mb-6">
+                  Use this calculator to determine how many working days you have in a year, 
+                  accounting for weekends, public holidays, and your vacation days.
+                </p>
+                <WorkingDaysCalculator 
+                  onYearChange={handleYearChange}
+                  onVacationDaysChange={handleVacationDaysChange}
+                  initialYear={selectedYear}
+                  initialVacationDays={vacationDays}
+                />
+              </div>
+
+              <h3 className="text-xl font-medium pt-4">How many days per week did you typically work from home?</h3>
               <div className="px-4 py-8">
                 <Slider
                   value={formData.daysPerWeek !== null ? [formData.daysPerWeek] : [0]}
@@ -143,7 +187,7 @@ const WorkFromHome = () => {
 
               <div className="space-y-4 pt-4 animate-slide-up">
                 <h3 className="text-xl font-medium">How much remote working allowance did you receive from your employer?</h3>
-                <p className="text-sm text-muted-foreground">Enter the total amount received for 2024</p>
+                <p className="text-sm text-muted-foreground">Enter the total amount received for the tax year</p>
                 
                 <div className="relative mt-2">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -174,19 +218,6 @@ const WorkFromHome = () => {
             </Button>
           </div>
         </form>
-
-        {/* Working Days Calculator Section */}
-        <div className="pt-6 border-t border-border">
-          <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-            <CalendarDays className="h-5 w-5" />
-            Calculate Your Working Days
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            Use this calculator to determine how many working days you have in a year, 
-            accounting for weekends, public holidays, and your vacation days.
-          </p>
-          <WorkingDaysCalculator />
-        </div>
       </div>
     </Layout>
   );

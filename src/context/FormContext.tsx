@@ -8,6 +8,7 @@ export type FormData = {
   internetCost: number | null;
   heatingCost: number | null;
   remoteAllowance: number | null;
+  workingDays: number | null;
 };
 
 type FormContextType = {
@@ -23,6 +24,7 @@ const initialFormData: FormData = {
   internetCost: null,
   heatingCost: null,
   remoteAllowance: null,
+  workingDays: null,
 };
 
 const FormContext = createContext<FormContextType | undefined>(undefined);
