@@ -8,4 +8,10 @@ import { initializeGoogleAnalytics } from './utils/analytics';
 // Replace 'G-XXXXXXXXXX' with your actual Google Analytics measurement ID
 initializeGoogleAnalytics('G-XXXXXXXXXX');
 
-createRoot(document.getElementById("root")!).render(<App />);
+// Make sure we have a root element
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+  console.error("Root element not found");
+} else {
+  createRoot(rootElement).render(<App />);
+}

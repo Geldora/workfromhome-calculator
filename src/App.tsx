@@ -24,6 +24,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<WorkFromHome />} />
+            <Route path="/index" element={<Navigate to="/" replace />} />
             <Route path="/costs" element={<CostCalculation />} />
             <Route path="/results" element={<Results />} />
             <Route path="/working-days" element={<WorkingDaysCalculatorPage />} />
