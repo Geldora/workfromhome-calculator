@@ -45,21 +45,21 @@ const Results = () => {
             title="Work From Home"
             value={formData.workedFromHome ? "Yes" : "No"}
             subtitle={formData.workedFromHome ? `${formData.daysPerWeek} days per week` : "Not applicable"}
-            label="Variable A"
+            label="Days Per Week"
           />
 
           <InfoCard 
             title="Electricity"
             value={formatCurrency(formData.electricityCost)}
             subtitle="Annual cost"
-            label="Variable B"
+            label="Electricity Cost"
           />
           
           <InfoCard 
             title="Internet"
             value={formatCurrency(formData.internetCost)}
             subtitle="Annual cost"
-            label="Variable C"
+            label="Internet Cost"
           />
         </div>
         
@@ -68,7 +68,7 @@ const Results = () => {
             title="Heating"
             value={formatCurrency(formData.heatingCost)}
             subtitle="Annual cost"
-            label="Variable D"
+            label="Heating Cost"
           />
           
           {formData.workedFromHome && (
@@ -76,7 +76,7 @@ const Results = () => {
               title="Remote Allowance"
               value={formatCurrency(formData.remoteAllowance)}
               subtitle="Received from employer"
-              label="Variable M"
+              label="Remote Allowance"
             />
           )}
           
