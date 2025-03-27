@@ -3,7 +3,6 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 export type FormData = {
   workedFromHome: boolean | null;
-  daysPerWeek: number | null;
   electricityCost: number | null;
   internetCost: number | null;
   heatingCost: number | null;
@@ -19,7 +18,6 @@ type FormContextType = {
 
 const initialFormData: FormData = {
   workedFromHome: null,
-  daysPerWeek: null,
   electricityCost: null,
   internetCost: null,
   heatingCost: null,

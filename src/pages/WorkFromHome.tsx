@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { Euro, CalendarDays } from 'lucide-react';
@@ -36,11 +35,6 @@ const WorkFromHome = () => {
     
     if (formData.workedFromHome === null) {
       toast.error("Please select whether you worked from home or not");
-      return;
-    }
-    
-    if (formData.workedFromHome && formData.daysPerWeek === null) {
-      toast.error("Please select how many days per week you worked from home");
       return;
     }
 
@@ -88,8 +82,7 @@ const WorkFromHome = () => {
             <RadioGroup 
               value={formData.workedFromHome === null ? undefined : formData.workedFromHome.toString()} 
               onValueChange={(value) => updateFormData({ 
-                workedFromHome: value === 'true',
-                daysPerWeek: value === 'false' ? 0 : formData.daysPerWeek
+                workedFromHome: value === 'true'
               })}
               className="flex flex-col sm:flex-row gap-4 pt-2"
             >
@@ -157,32 +150,6 @@ const WorkFromHome = () => {
                   initialYear={selectedYear}
                   initialVacationDays={vacationDays}
                 />
-              </div>
-
-              <h3 className="text-xl font-medium pt-4">How many days per week did you typically work from home?</h3>
-              <div className="px-4 py-8">
-                <Slider
-                  value={formData.daysPerWeek !== null ? [formData.daysPerWeek] : [0]}
-                  onValueChange={(value) => updateFormData({ daysPerWeek: value[0] })}
-                  max={7}
-                  step={0.5}
-                  className="py-4"
-                />
-                <div className="flex justify-between mt-2 text-sm text-muted-foreground">
-                  <span>0</span>
-                  <span>1</span>
-                  <span>2</span>
-                  <span>3</span>
-                  <span>4</span>
-                  <span>5</span>
-                  <span>6</span>
-                  <span>7</span>
-                </div>
-                {formData.daysPerWeek !== null && (
-                  <p className="text-center mt-8 text-lg">
-                    <span className="font-medium text-2xl">{formData.daysPerWeek}</span> days per week
-                  </p>
-                )}
               </div>
 
               <div className="space-y-4 pt-4 animate-slide-up">

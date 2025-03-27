@@ -15,20 +15,13 @@ const Results = () => {
   
   useEffect(() => {
     // Check if user has completed the forms
-    // Only required fields are workedFromHome and daysPerWeek if workedFromHome is true
-    if (
-      (formData.workedFromHome === null) || 
-      (formData.workedFromHome === true && formData.daysPerWeek === null)
-    ) {
+    if (formData.workedFromHome === null) {
       toast.error("Please complete all required steps before viewing results");
       navigate('/');
     }
   }, [formData, navigate]);
 
-  if (
-    formData.workedFromHome === null || 
-    (formData.workedFromHome === true && formData.daysPerWeek === null)
-  ) {
+  if (formData.workedFromHome === null) {
     return null; // Will redirect due to useEffect
   }
 
@@ -44,8 +37,8 @@ const Results = () => {
           <InfoCard 
             title="Work From Home"
             value={formData.workedFromHome ? "Yes" : "No"}
-            subtitle={formData.workedFromHome ? `${formData.daysPerWeek} days per week` : "Not applicable"}
-            label="Days Per Week"
+            subtitle={formData.workedFromHome ? "Remote worker" : "Not applicable"}
+            label="Status"
           />
           
           {formData.workedFromHome && formData.workingDays !== null && (

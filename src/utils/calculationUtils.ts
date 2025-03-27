@@ -28,13 +28,12 @@ export const calculateResult = (formData: FormData) => {
   const heatingCost = formData.heatingCost ?? 0;
   const remoteAllowance = formData.remoteAllowance ?? 0;
   
-  // Use working days if available, otherwise fallback to calculation based on days per week
-  const workingDays = formData.workingDays ?? 
-    (formData.daysPerWeek ? formData.daysPerWeek * 52 : 0);
+  // Use working days from the calculator
+  const workingDays = formData.workingDays ?? 0;
 
   const costs = electricityCost + internetCost + heatingCost;
 
-  // New formula: ((Costs × Working Days) ÷ 365 - Remote Allowance) × 30%
+  // Formula: ((Costs × Working Days) ÷ 365 - Remote Allowance) × 30%
   const result = ((costs * workingDays) / 365 - remoteAllowance) * 0.3;
   return Math.max(0, result); // Ensure the result is not negative
 };
