@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { Euro, CalendarDays } from 'lucide-react';
 import WorkingDaysCalculator from '@/components/WorkingDaysCalculator';
 import { getYearBreakdown } from '@/utils/workingDaysUtils';
+import InfoCard from '@/components/InfoCard';
 
 const WorkFromHome = () => {
   const navigate = useNavigate();
@@ -21,12 +22,20 @@ const WorkFromHome = () => {
   );
   const [vacationDays, setVacationDays] = useState(0);
   const [selectedYear, setSelectedYear] = useState(2024);
+  const [yearBreakdown, setYearBreakdown] = useState<{
+    totalDays: number;
+    weekendDays: number;
+    publicHolidays: number;
+    vacationDays: number;
+    workingDays: number;
+  } | null>(null);
 
   // Update working days when calculator values change
   useEffect(() => {
     if (formData.workedFromHome) {
-      const yearBreakdown = getYearBreakdown(selectedYear, vacationDays);
-      updateFormData({ workingDays: yearBreakdown.workingDays });
+      const breakdown = getYearBreakdown(selectedYear, vacationDays);
+      updateFormData({ workingDays: breakdown.workingDays });
+      setYearBreakdown(breakdown);
     }
   }, [selectedYear, vacationDays, formData.workedFromHome, updateFormData]);
 
@@ -49,8 +58,8 @@ const WorkFromHome = () => {
       updateFormData({ remoteAllowance });
       
       // Ensure working days is set
-      const yearBreakdown = getYearBreakdown(selectedYear, vacationDays);
-      updateFormData({ workingDays: yearBreakdown.workingDays });
+      const breakdown = getYearBreakdown(selectedYear, vacationDays);
+      updateFormData({ workingDays: breakdown.workingDays });
     } else {
       updateFormData({ 
         remoteAllowance: 0,
@@ -76,6 +85,7 @@ const WorkFromHome = () => {
     >
       <div className="space-y-12">
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* 1) Did you work from home section */}
           <div className="space-y-4">
             <h3 className="text-xl font-medium">Did you work from home in the past tax year?</h3>
             
@@ -134,7 +144,7 @@ const WorkFromHome = () => {
 
           {formData.workedFromHome && (
             <div className="space-y-6 pt-4 animate-slide-up">
-              {/* Working Days Calculator Section - Show first when "Yes" is selected */}
+              {/* 2) Calculate Your Working Days section */}
               <div className="border-b border-border pb-6">
                 <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
                   <CalendarDays className="h-5 w-5" />
@@ -144,15 +154,81 @@ const WorkFromHome = () => {
                   Use this calculator to determine how many working days you have in a year, 
                   accounting for weekends, public holidays, and your vacation days.
                 </p>
-                <WorkingDaysCalculator 
-                  onYearChange={handleYearChange}
-                  onVacationDaysChange={handleVacationDaysChange}
-                  initialYear={selectedYear}
-                  initialVacationDays={vacationDays}
-                />
+                
+                {/* 2a) Working Days Calculator */}
+                <div className="space-y-6">
+                  <Card className="p-6 space-y-4 card-gradient">
+                    <h3 className="text-xl font-bold">Working Days Calculator</h3>
+                    <div className="mt-4 space-y-4">
+                      <div className="space-y-2">
+                        <label htmlFor="year" className="block text-sm font-medium">
+                          Tax Year
+                        </label>
+                        <YearSelector 
+                          selectedYear={selectedYear} 
+                          onChange={(year) => {
+                            setSelectedYear(year);
+                          }} 
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label htmlFor="vacationDays" className="block text-sm font-medium">
+                          Vacation Days
+                        </label>
+                        <Input
+                          id="vacationDays"
+                          type="number"
+                          min="0"
+                          value={vacationDays}
+                          onChange={(e) => handleVacationDaysChange(parseInt(e.target.value) || 0)}
+                          className="w-full"
+                          placeholder="Enter number of vacation days"
+                        />
+                      </div>
+                    </div>
+                  </Card>
+                  
+                  {/* Display InfoCards from calculation */}
+                  {yearBreakdown && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                      <InfoCard
+                        title="Total Days"
+                        value={yearBreakdown.totalDays.toString()}
+                        subtitle={`Days in ${selectedYear}`}
+                        label="Calendar"
+                      />
+                      <InfoCard
+                        title="Weekend Days"
+                        value={yearBreakdown.weekendDays.toString()}
+                        subtitle="Saturdays and Sundays"
+                        label="Weekends"
+                      />
+                      <InfoCard
+                        title="Public Holidays"
+                        value={yearBreakdown.publicHolidays.toString()}
+                        subtitle="Irish bank holidays (excluding weekends)"
+                        label="Holidays"
+                      />
+                      <InfoCard
+                        title="Vacation Days"
+                        value={yearBreakdown.vacationDays.toString()}
+                        subtitle="Your time off from work"
+                        label="Personal"
+                      />
+                      <InfoCard
+                        title="Working Days"
+                        value={yearBreakdown.workingDays.toString()}
+                        subtitle="Business days in Ireland"
+                        label="Result"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="space-y-4 pt-4 animate-slide-up">
+              {/* 3) Remote working allowance section */}
+              <div className="space-y-4 pt-4">
                 <h3 className="text-xl font-medium">How much remote working allowance did you receive from your employer?</h3>
                 <p className="text-sm text-muted-foreground">Enter the total amount received for the tax year</p>
                 
@@ -175,6 +251,7 @@ const WorkFromHome = () => {
             </div>
           )}
 
+          {/* 4) Continue to Costs button */}
           <div className="pt-6 flex justify-end">
             <Button 
               type="submit" 
@@ -192,5 +269,6 @@ const WorkFromHome = () => {
 
 // Import utility for conditional classnames
 import { cn } from '@/lib/utils';
+import YearSelector from '@/components/YearSelector';
 
 export default WorkFromHome;
