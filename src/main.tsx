@@ -8,14 +8,16 @@ const rootElement = document.getElementById("root");
 if (!rootElement) {
   console.error("Root element not found");
 } else {
-  // First render the app
+  // Render the app
   createRoot(rootElement).render(<App />);
   
-  // Then initialize analytics after the app has rendered
-  import('./utils/analytics').then(({ initializeGoogleAnalytics }) => {
-    // Replace 'G-XXXXXXXXXX' with your actual Google Analytics measurement ID
-    setTimeout(() => {
+  // Initialize analytics in a non-blocking way
+  window.addEventListener('load', () => {
+    // Load analytics after the app is fully loaded
+    import('./utils/analytics').then(({ initializeGoogleAnalytics }) => {
       initializeGoogleAnalytics('G-XXXXXXXXXX');
-    }, 2000); // Delay analytics initialization by 2 seconds
+    }).catch(err => {
+      console.error('Failed to load analytics:', err);
+    });
   });
 }
