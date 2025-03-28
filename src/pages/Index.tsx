@@ -1,24 +1,11 @@
 
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import Layout from '@/components/Layout';
+import WorkFromHome from './WorkFromHome';
 
 const Index = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Redirect to the main application page
-    navigate('/');
-  }, [navigate]);
-
-  // Fallback content while redirecting
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Loading...</h1>
-        <p className="text-xl text-gray-600">Please wait while we redirect you to the application.</p>
-      </div>
-    </div>
-  );
+  // Instead of redirecting, we'll directly render the WorkFromHome component
+  return <WorkFromHome />;
 };
 
 export default Index;

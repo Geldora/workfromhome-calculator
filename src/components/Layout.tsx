@@ -1,5 +1,5 @@
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import Footer from './Footer';
@@ -10,7 +10,8 @@ type LayoutProps = {
   subtitle?: string;
 };
 
-const Layout = ({ children, title, subtitle }: LayoutProps) => {
+// Use memo to prevent unnecessary re-renders of the Layout component
+const Layout = memo(({ children, title, subtitle }: LayoutProps) => {
   const location = useLocation();
   
   const routes = [
@@ -60,6 +61,9 @@ const Layout = ({ children, title, subtitle }: LayoutProps) => {
       </div>
     </div>
   );
-};
+});
+
+// Display name for React DevTools
+Layout.displayName = 'Layout';
 
 export default Layout;
