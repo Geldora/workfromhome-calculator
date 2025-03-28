@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { FormProvider } from "@/context/FormContext";
 
 // Import pages
+import Index from "./pages/Index";
 import WorkFromHome from "./pages/WorkFromHome";
 import CostCalculation from "./pages/CostCalculation";
 import Results from "./pages/Results";
@@ -24,7 +25,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<WorkFromHome />} />
-            <Route path="/index" element={<Navigate to="/" replace />} />
+            <Route path="/index" element={<Index />} />
             <Route path="/costs" element={<CostCalculation />} />
             <Route path="/results" element={<Results />} />
             <Route path="/working-days" element={<WorkingDaysCalculatorPage />} />
