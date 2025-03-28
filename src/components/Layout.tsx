@@ -2,6 +2,7 @@
 import React, { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import Footer from './Footer';
 
 type LayoutProps = {
   children: ReactNode;
@@ -16,12 +17,11 @@ const Layout = ({ children, title, subtitle }: LayoutProps) => {
     { path: '/', label: 'Work Habits' },
     { path: '/costs', label: 'Annual Costs' },
     { path: '/results', label: 'Results' },
-    { path: '/working-days', label: 'Working Days' },
   ];
 
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-16 sm:px-6 md:py-24">
-      <div className="w-full max-w-3xl mx-auto space-y-12 animate-fade-in">
+      <div className="w-full max-w-3xl mx-auto space-y-12 animate-fade-in flex flex-col min-h-[calc(100vh-8rem)]">
         <header className="space-y-2 text-center">
           <h1 className="text-4xl font-light text-foreground">{title}</h1>
           {subtitle && (
@@ -50,11 +50,13 @@ const Layout = ({ children, title, subtitle }: LayoutProps) => {
           </div>
         </nav>
 
-        <main className="w-full animate-slide-up">
+        <main className="w-full flex-grow animate-slide-up">
           <div className="bg-white/70 backdrop-blur-sm border border-border/50 rounded-2xl shadow-sm p-8 w-full">
             {children}
           </div>
         </main>
+        
+        <Footer />
       </div>
     </div>
   );
