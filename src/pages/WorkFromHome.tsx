@@ -189,41 +189,7 @@ const WorkFromHome = () => {
                     </div>
                   </Card>
                   
-                  {/* Display InfoCards from calculation */}
-                  {yearBreakdown && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-                      <InfoCard
-                        title="Total Days"
-                        value={yearBreakdown.totalDays.toString()}
-                        subtitle={`Days in ${selectedYear}`}
-                        label="Calendar"
-                      />
-                      <InfoCard
-                        title="Weekend Days"
-                        value={yearBreakdown.weekendDays.toString()}
-                        subtitle="Saturdays and Sundays"
-                        label="Weekends"
-                      />
-                      <InfoCard
-                        title="Public Holidays"
-                        value={yearBreakdown.publicHolidays.toString()}
-                        subtitle="Irish bank holidays (excluding weekends)"
-                        label="Holidays"
-                      />
-                      <InfoCard
-                        title="Vacation Days"
-                        value={yearBreakdown.vacationDays.toString()}
-                        subtitle="Your time off from work"
-                        label="Personal"
-                      />
-                      <InfoCard
-                        title="Working Days"
-                        value={yearBreakdown.workingDays.toString()}
-                        subtitle="Business days in Ireland"
-                        label="Result"
-                      />
-                    </div>
-                  )}
+                  {/* InfoCards removed from here, but the yearBreakdown state calculation is preserved */}
                 </div>
               </div>
 
