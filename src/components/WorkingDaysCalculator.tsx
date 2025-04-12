@@ -82,9 +82,9 @@ const WorkingDaysCalculator = ({
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="col-span-1 md:col-span-1 p-6 space-y-4 card-gradient">
-          <h3 className="text-xl font-bold">Working Days Calculator</h3>
+          <h3 className="text-xl font-bold">Remote Working Days Calculator</h3>
           <p className="text-sm text-muted-foreground">
-            Calculate working days in the Republic of Ireland for a specific year, 
+            Calculate remote working days in the Republic of Ireland for a specific year, 
             excluding weekends, public holidays, and your vacation days.
           </p>
           
@@ -141,7 +141,7 @@ const WorkingDaysCalculator = ({
               <InfoCard
                 title="Working Days"
                 value={yearBreakdown.workingDays.toString()}
-                subtitle="Business days in Ireland"
+                subtitle="Remote working days in Ireland"
                 label="Result"
               />
             </>

@@ -6,8 +6,8 @@ import WorkingDaysCalculator from '@/components/WorkingDaysCalculator';
 const WorkingDaysCalculatorPage = () => {
   return (
     <Layout
-      title="Working Days Calculator"
-      subtitle="Calculate working days in the Republic of Ireland"
+      title="Remote Working Days Calculator"
+      subtitle="Calculate remote working days in the Republic of Ireland"
     >
       <WorkingDaysCalculator />
     </Layout>

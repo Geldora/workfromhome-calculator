@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormData } from '@/context/FormContext';
@@ -30,7 +29,6 @@ const WorkFromHome = () => {
     workingDays: number;
   } | null>(null);
 
-  // Update working days when calculator values change
   useEffect(() => {
     if (formData.workedFromHome) {
       const breakdown = getYearBreakdown(selectedYear, vacationDays);
@@ -57,7 +55,6 @@ const WorkFromHome = () => {
 
       updateFormData({ remoteAllowance });
       
-      // Ensure working days is set
       const breakdown = getYearBreakdown(selectedYear, vacationDays);
       updateFormData({ workingDays: breakdown.workingDays });
     } else {
@@ -85,7 +82,6 @@ const WorkFromHome = () => {
     >
       <div className="space-y-12">
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* 1) Did you work from home section */}
           <div className="space-y-4">
             <h3 className="text-xl font-medium">Did you work from home in the past tax year?</h3>
             
@@ -144,21 +140,19 @@ const WorkFromHome = () => {
 
           {formData.workedFromHome && (
             <div className="space-y-6 pt-4 animate-slide-up">
-              {/* 2) Calculate Your Working Days section */}
               <div className="border-b border-border pb-6">
                 <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
                   <CalendarDays className="h-5 w-5" />
-                  Calculate Your Working Days
+                  Calculate Your Number of Remote Working Days
                 </h2>
                 <p className="text-muted-foreground mb-6">
-                  Use this calculator to determine how many working days you have in a year, 
+                  Use this calculator to determine how many remote working days you have in a year, 
                   accounting for weekends, public holidays, and your vacation days.
                 </p>
                 
-                {/* 2a) Working Days Calculator */}
                 <div className="space-y-6">
                   <Card className="p-6 space-y-4 card-gradient">
-                    <h3 className="text-xl font-bold">Working Days Calculator</h3>
+                    <h3 className="text-xl font-bold">Remote Working Days Calculator</h3>
                     <div className="mt-4 space-y-4">
                       <div className="space-y-2">
                         <label htmlFor="year" className="block text-sm font-medium">
@@ -188,12 +182,9 @@ const WorkFromHome = () => {
                       </div>
                     </div>
                   </Card>
-                  
-                  {/* InfoCards removed from here, but the yearBreakdown state calculation is preserved */}
                 </div>
               </div>
 
-              {/* 3) Remote working allowance section */}
               <div className="space-y-4 pt-4">
                 <h3 className="text-xl font-medium">How much remote working allowance did you receive from your employer?</h3>
                 <p className="text-sm text-muted-foreground">Enter the total amount received for the tax year</p>
@@ -217,7 +208,6 @@ const WorkFromHome = () => {
             </div>
           )}
 
-          {/* 4) Continue to Costs button */}
           <div className="pt-6 flex justify-end">
             <Button 
               type="submit" 
@@ -233,7 +223,6 @@ const WorkFromHome = () => {
   );
 };
 
-// Import utility for conditional classnames
 import { cn } from '@/lib/utils';
 import YearSelector from '@/components/YearSelector';
 
