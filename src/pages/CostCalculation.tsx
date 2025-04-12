@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormData } from '@/context/FormContext';
@@ -55,7 +56,7 @@ const CostCalculation = () => {
 
   return (
     <Layout 
-      title="Annual Costs" 
+      title="Allowable utility bills" 
       subtitle="Enter your yearly household expenses"
     >
       <form onSubmit={handleSubmit} className="space-y-8">
