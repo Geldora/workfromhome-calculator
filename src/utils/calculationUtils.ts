@@ -1,5 +1,6 @@
 
 import { FormData } from '@/context/FormContext';
+import { getTotalDaysInYear } from './workingDaysUtils';
 
 export const formatCurrency = (amount: number | null) => {
   if (amount === null) return '€0.00';
@@ -11,7 +12,7 @@ export const formatCurrency = (amount: number | null) => {
   }).format(amount);
 };
 
-// Calculate the result using the formula ((Costs × Working Days) ÷ 365 - Remote Allowance) × 30%
+// Calculate the result using the formula ((Costs × Working Days) ÷ Total Days in the year - Remote Allowance) × 30%
 export const calculateResult = (formData: FormData) => {
   if (formData.workedFromHome === null) {
     return 0;
@@ -33,7 +34,10 @@ export const calculateResult = (formData: FormData) => {
 
   const costs = electricityCost + internetCost + heatingCost;
 
-  // Formula: ((Costs × Working Days) ÷ 365 - Remote Allowance) × 30%
-  const result = ((costs * workingDays) / 365 - remoteAllowance) * 0.3;
+  // Get the total days in the year (365 or 366 for leap year)
+  const totalDaysInYear = getTotalDaysInYear(new Date().getFullYear());
+
+  // Formula: ((Costs × Working Days) ÷ Total Days in the year - Remote Allowance) × 30%
+  const result = ((costs * workingDays) / totalDaysInYear - remoteAllowance) * 0.3;
   return Math.max(0, result); // Ensure the result is not negative
 };
