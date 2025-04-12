@@ -80,7 +80,7 @@ const WorkFromHome = () => {
 
   return (
     <Layout 
-      title="Work Habits" 
+      title="Remote Working" 
       subtitle="Tell us about your work-from-home situation"
     >
       <div className="space-y-12">

@@ -15,7 +15,7 @@ const Layout = memo(({ children, title, subtitle }: LayoutProps) => {
   const location = useLocation();
   
   const routes = [
-    { path: '/', label: 'Work Habits' },
+    { path: '/', label: 'Remote Working' },
     { path: '/costs', label: 'Allowable utility bills' },
     { path: '/results', label: 'Results' },
   ];
