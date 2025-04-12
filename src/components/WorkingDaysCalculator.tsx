@@ -17,16 +17,19 @@ interface WorkingDaysCalculatorProps {
   onVacationDaysChange?: (days: number) => void;
   initialYear?: number;
   initialVacationDays?: number;
+  initialRemoteDaysPerWeek?: number;
 }
 
 const WorkingDaysCalculator = ({
   onYearChange,
   onVacationDaysChange,
   initialYear = 2024,
-  initialVacationDays = 0
+  initialVacationDays = 0,
+  initialRemoteDaysPerWeek = 5
 }: WorkingDaysCalculatorProps) => {
   const [selectedYear, setSelectedYear] = useState<number>(initialYear);
   const [vacationDays, setVacationDays] = useState<number>(initialVacationDays);
+  const [remoteDaysPerWeek, setRemoteDaysPerWeek] = useState<number>(initialRemoteDaysPerWeek);
   const [publicHolidays, setPublicHolidays] = useState<IrishPublicHoliday[]>([]);
   const [yearBreakdown, setYearBreakdown] = useState<{
     totalDays: number;
@@ -43,24 +46,38 @@ const WorkingDaysCalculator = ({
     
     // Calculate year breakdown
     const breakdown = getYearBreakdown(selectedYear, vacationDays);
-    setYearBreakdown(breakdown);
+    
+    // Adjust working days based on remote days per week
+    const adjustedBreakdown = {
+      ...breakdown,
+      workingDays: Math.round(breakdown.workingDays * (remoteDaysPerWeek / 5))
+    };
+    
+    setYearBreakdown(adjustedBreakdown);
 
     // Call parent callback if provided
     if (onYearChange) {
       onYearChange(selectedYear);
     }
-  }, [selectedYear, onYearChange]);
+  }, [selectedYear, remoteDaysPerWeek, onYearChange]);
 
   // Update year breakdown when vacation days change
   useEffect(() => {
     const breakdown = getYearBreakdown(selectedYear, vacationDays);
-    setYearBreakdown(breakdown);
+    
+    // Adjust working days based on remote days per week
+    const adjustedBreakdown = {
+      ...breakdown,
+      workingDays: Math.round(breakdown.workingDays * (remoteDaysPerWeek / 5))
+    };
+    
+    setYearBreakdown(adjustedBreakdown);
 
     // Call parent callback if provided
     if (onVacationDaysChange) {
       onVacationDaysChange(vacationDays);
     }
-  }, [vacationDays, selectedYear, onVacationDaysChange]);
+  }, [vacationDays, selectedYear, remoteDaysPerWeek, onVacationDaysChange]);
 
   // Handle updating vacation days
   const handleVacationDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,6 +92,17 @@ const WorkingDaysCalculator = ({
       } else {
         setVacationDays(value);
       }
+    }
+  };
+  
+  // Handle updating remote days per week
+  const handleRemoteDaysPerWeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (isNaN(value) || value < 0) {
+      setRemoteDaysPerWeek(0);
+    } else {
+      // Ensure remote days per week are not more than 5
+      setRemoteDaysPerWeek(Math.min(value, 5));
     }
   };
 
@@ -107,6 +135,22 @@ const WorkingDaysCalculator = ({
               onChange={handleVacationDaysChange}
               className="w-full"
               placeholder="Enter number of vacation days"
+            />
+          </div>
+          
+          <div className="mt-6 space-y-2">
+            <label htmlFor="remoteDaysPerWeek" className="block text-sm font-medium">
+              Remote working days per week
+            </label>
+            <Input
+              id="remoteDaysPerWeek"
+              type="number"
+              min="0"
+              max="5"
+              value={remoteDaysPerWeek}
+              onChange={handleRemoteDaysPerWeekChange}
+              className="w-full"
+              placeholder="Enter remote days per week"
             />
           </div>
         </Card>

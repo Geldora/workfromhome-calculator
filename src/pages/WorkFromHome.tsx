@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormData } from '@/context/FormContext';
@@ -9,9 +10,10 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { Euro, CalendarDays } from 'lucide-react';
-import WorkingDaysCalculator from '@/components/WorkingDaysCalculator';
-import { getYearBreakdown } from '@/utils/workingDaysUtils';
+import YearSelector from '@/components/YearSelector';
 import InfoCard from '@/components/InfoCard';
+import { getYearBreakdown } from '@/utils/workingDaysUtils';
+import { cn } from '@/lib/utils';
 
 const WorkFromHome = () => {
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ const WorkFromHome = () => {
     formData.remoteAllowance !== null ? formData.remoteAllowance.toString() : ''
   );
   const [vacationDays, setVacationDays] = useState(0);
+  const [remoteDaysPerWeek, setRemoteDaysPerWeek] = useState(5);
   const [selectedYear, setSelectedYear] = useState(2024);
   const [yearBreakdown, setYearBreakdown] = useState<{
     totalDays: number;
@@ -32,10 +35,15 @@ const WorkFromHome = () => {
   useEffect(() => {
     if (formData.workedFromHome) {
       const breakdown = getYearBreakdown(selectedYear, vacationDays);
-      updateFormData({ workingDays: breakdown.workingDays });
-      setYearBreakdown(breakdown);
+      // Adjust working days based on remote days per week
+      const adjustedWorkingDays = Math.round(breakdown.workingDays * (remoteDaysPerWeek / 5));
+      updateFormData({ workingDays: adjustedWorkingDays });
+      setYearBreakdown({
+        ...breakdown,
+        workingDays: adjustedWorkingDays
+      });
     }
-  }, [selectedYear, vacationDays, formData.workedFromHome, updateFormData]);
+  }, [selectedYear, vacationDays, remoteDaysPerWeek, formData.workedFromHome, updateFormData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,7 +64,9 @@ const WorkFromHome = () => {
       updateFormData({ remoteAllowance });
       
       const breakdown = getYearBreakdown(selectedYear, vacationDays);
-      updateFormData({ workingDays: breakdown.workingDays });
+      // Adjust working days based on remote days per week
+      const adjustedWorkingDays = Math.round(breakdown.workingDays * (remoteDaysPerWeek / 5));
+      updateFormData({ workingDays: adjustedWorkingDays });
     } else {
       updateFormData({ 
         remoteAllowance: 0,
@@ -73,6 +83,16 @@ const WorkFromHome = () => {
 
   const handleVacationDaysChange = (days: number) => {
     setVacationDays(days);
+  };
+  
+  const handleRemoteDaysPerWeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (isNaN(value) || value < 0) {
+      setRemoteDaysPerWeek(0);
+    } else {
+      // Ensure remote days per week are not more than 5
+      setRemoteDaysPerWeek(Math.min(value, 5));
+    }
   };
 
   return (
@@ -175,9 +195,25 @@ const WorkFromHome = () => {
                           type="number"
                           min="0"
                           value={vacationDays}
-                          onChange={(e) => handleVacationDaysChange(parseInt(e.target.value) || 0)}
+                          onChange={(e) => setVacationDays(parseInt(e.target.value) || 0)}
                           className="w-full"
                           placeholder="Enter number of vacation days"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label htmlFor="remoteDaysPerWeek" className="block text-sm font-medium">
+                          Remote working days per week
+                        </label>
+                        <Input
+                          id="remoteDaysPerWeek"
+                          type="number"
+                          min="0"
+                          max="5"
+                          value={remoteDaysPerWeek}
+                          onChange={handleRemoteDaysPerWeekChange}
+                          className="w-full"
+                          placeholder="Enter remote days per week"
                         />
                       </div>
                     </div>
@@ -222,8 +258,5 @@ const WorkFromHome = () => {
     </Layout>
   );
 };
-
-import { cn } from '@/lib/utils';
-import YearSelector from '@/components/YearSelector';
 
 export default WorkFromHome;
