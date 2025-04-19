@@ -29,8 +29,8 @@ const Results = () => {
 
   return (
     <Layout 
-      title="Ireland's Remote Working Tax relief calculator: Your Results"
-      subtitle="Allowable remote working costs"
+      title="Ireland's Remote Working Tax relief calculator: Results"
+      subtitle="Step 3. Allowable remote working costs"
     >
       <div className="space-y-8">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="border-t border-border/50 pt-6">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Work From Home Calculator
+            © {new Date().getFullYear()} Ireland's Remote Working Tax relief calculator. Vibed by Geldora, coded by Lovable. 
           </div>
           <nav className="flex gap-6">
             <Link 
