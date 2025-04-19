@@ -59,29 +59,30 @@ const Results = () => {
             />
           )}
 
+
+        </div>
+        
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          
           <InfoCard 
             title="Electricity cost"
             value={formatCurrency(formData.electricityCost)}
             subtitle="Annual cost"
             label="Electricity"
           />
-        </div>
-        
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <InfoCard 
-            title="Broadband cost"
-            value={formatCurrency(formData.internetCost)}
-            subtitle="Annual cost"
-            label="Internet"
-          />
-          
+                    
           <InfoCard 
             title="Heating"
             value={formatCurrency(formData.heatingCost)}
             subtitle="Annual cost"
             label="Heating Cost"
           />
-          
+          <InfoCard 
+            title="Broadband cost"
+            value={formatCurrency(formData.internetCost)}
+            subtitle="Annual cost"
+            label="Internet"
+          />
 
         </div>
         
