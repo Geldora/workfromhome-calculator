@@ -97,8 +97,8 @@ const WorkFromHome = () => {
 
   return (
     <Layout 
-      title="Remote Working" 
-      subtitle="Tell us about your work-from-home situation"
+      title="Ireland's Remote Working Tax relief calculator" 
+      subtitle="Step 1. Tell us about your work-from-home situation"
     >
       <div className="space-y-12">
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -163,11 +163,11 @@ const WorkFromHome = () => {
               <div className="border-b border-border pb-6">
                 <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
                   <CalendarDays className="h-5 w-5" />
-                  Calculate Your Number of Remote Working Days
+                  First, let's calculate your number of remote working days
                 </h2>
                 <p className="text-muted-foreground mb-6">
-                  Use this calculator to determine how many remote working days you have in a year, 
-                  accounting for weekends, public holidays, and your vacation days.
+                  Use this calculator to determine how many allowable remote working days you have in a year,
+                  accounting for weekends, public holidays, and your vacation days. 
                 </p>
                 
                 <div className="space-y-6">
@@ -222,7 +222,7 @@ const WorkFromHome = () => {
               </div>
 
               <div className="space-y-4 pt-4">
-                <h3 className="text-xl font-medium">How much remote working allowance did you receive from your employer?</h3>
+                <h3 className="text-xl font-medium">Have you received a remote working allowance from your employer? Leave empty, if you haven't received it.</h3>
                 <p className="text-sm text-muted-foreground">Enter the total amount received for the tax year</p>
                 
                 <div className="relative mt-2">
