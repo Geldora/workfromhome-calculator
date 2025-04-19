@@ -10,14 +10,6 @@ const Footer = () => {
           <div className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Ireland's Remote Working Tax relief calculator. Vibed by Geldora, coded by Lovable. 
           </div>
-          <nav className="flex gap-6">
-            <Link 
-              to="/working-days" 
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Working Days Calculator
-            </Link>
-          </nav>
         </div>
       </div>
     </footer>
