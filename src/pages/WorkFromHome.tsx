@@ -222,8 +222,8 @@ const WorkFromHome = () => {
               </div>
 
               <div className="space-y-4 pt-4">
-                <h3 className="text-xl font-medium">Have you received a remote working allowance from your employer? Leave empty, if you haven't received it.</h3>
-                <p className="text-sm text-muted-foreground">Enter the total amount received for the tax year</p>
+                <h3 className="text-xl font-medium">Have you received a remote working allowance from your employer?</h3>
+                <p className="text-sm text-muted-foreground">Enter the total amount received for the chosen tax year. Leave this at 0, if you haven't been receiving a Remote working Allowance.</p>
                 
                 <div className="relative mt-2">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
