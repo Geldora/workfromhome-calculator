@@ -123,6 +123,13 @@ const CostCalculation = () => {
               />
             </div>
           </div>
+
+          <div className="space-y-4 pt-2">
+            <h3 className="text-xl font-medium">Cost shared by more than one person</h3>
+            <p className="text-sm text-muted-foreground">
+              If the cost is shared between two or more people, it can be apportioned based on the amount each paid.
+            </p>
+          </div>
         </div>
 
         <div className="pt-8 flex justify-between items-center">
@@ -149,3 +156,4 @@ const CostCalculation = () => {
 };
 
 export default CostCalculation;
+
