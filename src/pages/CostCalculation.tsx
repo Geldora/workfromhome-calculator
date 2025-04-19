@@ -59,12 +59,7 @@ const CostCalculation = () => {
       title="Ireland's Remote Working Tax relief calculator: Allowable utility bills" 
       subtitle="Step 2. Enter your yearly household expenses"
     >
-      <div className="space-y-4 pt-2">
-            <h3 className="text-xl font-medium">Cost shared by more than one person</h3>
-            <p className="text-sm text-muted-foreground">
-              If the cost is shared between two or more people, it can be apportioned based on the amount each paid.
-            </p>
-      </div>
+
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="grid gap-8">
           <div className="space-y-4">
@@ -129,7 +124,13 @@ const CostCalculation = () => {
               />
             </div>
           </div>
-
+  
+          <div className="space-y-4 pt-2">
+            <h3 className="text-xl font-medium">Cost shared by more than one person</h3>
+            <p className="text-sm text-muted-foreground">
+              If the cost is shared between two or more people, it can be apportioned based on the amount each paid.
+            </p>
+      </div>
 
         </div>
 
