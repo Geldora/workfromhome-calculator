@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormData } from '@/context/FormContext';
@@ -85,8 +84,20 @@ const WorkFromHome = () => {
     setVacationDays(days);
   };
   
+  // Handle updating remote days per week - Now supports decimal values
   const handleRemoteDaysPerWeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
+    // Use the direct value from the input field
+    const inputValue = e.target.value;
+    
+    // If the field is empty, set to 0
+    if (inputValue === '') {
+      setRemoteDaysPerWeek(0);
+      return;
+    }
+    
+    // Parse as float to allow decimal values
+    const value = parseFloat(inputValue);
+    
     if (isNaN(value) || value < 0) {
       setRemoteDaysPerWeek(0);
     } else {
@@ -210,6 +221,7 @@ const WorkFromHome = () => {
                           type="number"
                           min="0"
                           max="5"
+                          step="0.5" // Allow increments of 0.5 for half days
                           value={remoteDaysPerWeek}
                           onChange={handleRemoteDaysPerWeekChange}
                           className="w-full"

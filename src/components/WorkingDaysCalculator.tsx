@@ -79,9 +79,20 @@ const WorkingDaysCalculator = ({
     }
   }, [vacationDays, selectedYear, remoteDaysPerWeek, onVacationDaysChange]);
 
-  // Handle updating vacation days
+  // Handle updating vacation days - Fix for leading zeros issue
   const handleVacationDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
+    // Use the direct value from the input field instead of parsing as integer first
+    const inputValue = e.target.value;
+    
+    // If the field is empty, set to 0
+    if (inputValue === '') {
+      setVacationDays(0);
+      return;
+    }
+    
+    // Parse the value
+    const value = parseFloat(inputValue);
+    
     if (isNaN(value) || value < 0) {
       setVacationDays(0);
     } else {
@@ -95,9 +106,20 @@ const WorkingDaysCalculator = ({
     }
   };
   
-  // Handle updating remote days per week
+  // Handle updating remote days per week - Now supports decimal values
   const handleRemoteDaysPerWeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
+    // Use the direct value from the input field
+    const inputValue = e.target.value;
+    
+    // If the field is empty, set to 0
+    if (inputValue === '') {
+      setRemoteDaysPerWeek(0);
+      return;
+    }
+    
+    // Parse as float to allow decimal values
+    const value = parseFloat(inputValue);
+    
     if (isNaN(value) || value < 0) {
       setRemoteDaysPerWeek(0);
     } else {
@@ -131,7 +153,9 @@ const WorkingDaysCalculator = ({
               id="vacationDays"
               type="number"
               min="0"
-              value={vacationDays}
+              // Remove the value property to allow direct input control
+              // Use defaultValue instead of value to avoid controlled component issues
+              defaultValue={vacationDays.toString()}
               onChange={handleVacationDaysChange}
               className="w-full"
               placeholder="Enter number of vacation days"
@@ -147,7 +171,9 @@ const WorkingDaysCalculator = ({
               type="number"
               min="0"
               max="5"
-              value={remoteDaysPerWeek}
+              step="0.5" // Allow increments of 0.5 for half days
+              // Use defaultValue instead of value to avoid controlled component issues
+              defaultValue={remoteDaysPerWeek.toString()}
               onChange={handleRemoteDaysPerWeekChange}
               className="w-full"
               placeholder="Enter remote days per week"
