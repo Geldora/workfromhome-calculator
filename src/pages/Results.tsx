@@ -29,8 +29,8 @@ const Results = () => {
 
   return (
     <Layout 
-      title="Your Results" 
-      subtitle="Summary of your work habits and annual costs"
+      title="Ireland's Remote Working Tax relief calculator: Your Results"
+      subtitle="Allowable remote working costs"
     >
       <div className="space-y-8">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -43,27 +43,36 @@ const Results = () => {
           
           {formData.workedFromHome && formData.workingDays !== null && (
             <InfoCard 
-              title="Working Days"
+              title="Remote Working Days"
               value={`${formData.workingDays}`}
-              subtitle="Total working days in the tax year"
-              label="Working Days"
+              subtitle="Total WFH days in the tax year"
+              label="Remote Working Days"
+            />
+          )}
+
+          {formData.workedFromHome && (
+            <InfoCard 
+              title="Remote Allowance"
+              value={formatCurrency(formData.remoteAllowance)}
+              subtitle="Received from employer"
+              label="Remote Allowance"
             />
           )}
 
           <InfoCard 
-            title="Electricity"
+            title="Electricity cost"
             value={formatCurrency(formData.electricityCost)}
             subtitle="Annual cost"
-            label="Electricity Cost"
+            label="Electricity"
           />
         </div>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <InfoCard 
-            title="Internet"
+            title="Broadband cost"
             value={formatCurrency(formData.internetCost)}
             subtitle="Annual cost"
-            label="Internet Cost"
+            label="Internet"
           />
           
           <InfoCard 
@@ -73,14 +82,7 @@ const Results = () => {
             label="Heating Cost"
           />
           
-          {formData.workedFromHome && (
-            <InfoCard 
-              title="Remote Allowance"
-              value={formatCurrency(formData.remoteAllowance)}
-              subtitle="Received from employer"
-              label="Remote Allowance"
-            />
-          )}
+
         </div>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
