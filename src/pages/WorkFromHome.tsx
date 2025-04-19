@@ -34,7 +34,6 @@ const WorkFromHome = () => {
   useEffect(() => {
     if (formData.workedFromHome) {
       const breakdown = getYearBreakdown(selectedYear, vacationDays);
-      // Adjust working days based on remote days per week
       const adjustedWorkingDays = Math.round(breakdown.workingDays * (remoteDaysPerWeek / 5));
       updateFormData({ workingDays: adjustedWorkingDays });
       setYearBreakdown({
@@ -63,7 +62,6 @@ const WorkFromHome = () => {
       updateFormData({ remoteAllowance });
       
       const breakdown = getYearBreakdown(selectedYear, vacationDays);
-      // Adjust working days based on remote days per week
       const adjustedWorkingDays = Math.round(breakdown.workingDays * (remoteDaysPerWeek / 5));
       updateFormData({ workingDays: adjustedWorkingDays });
     } else {
@@ -84,26 +82,32 @@ const WorkFromHome = () => {
     setVacationDays(days);
   };
   
-  // Handle updating remote days per week - Now supports decimal values
   const handleRemoteDaysPerWeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Use the direct value from the input field
     const inputValue = e.target.value;
     
-    // If the field is empty, set to 0
     if (inputValue === '') {
       setRemoteDaysPerWeek(0);
       return;
     }
     
-    // Parse as float to allow decimal values
     const value = parseFloat(inputValue);
     
     if (isNaN(value) || value < 0) {
       setRemoteDaysPerWeek(0);
     } else {
-      // Ensure remote days per week are not more than 5
       setRemoteDaysPerWeek(Math.min(value, 5));
     }
+  };
+
+  const handleStartOver = () => {
+    updateFormData({ 
+      workedFromHome: null,
+      remoteAllowance: null,
+      workingDays: null
+    });
+    setAllowanceInput('');
+    setVacationDays(0);
+    setRemoteDaysPerWeek(5);
   };
 
   return (
@@ -169,6 +173,24 @@ const WorkFromHome = () => {
             </RadioGroup>
           </div>
 
+          {formData.workedFromHome === false && (
+            <div className="animate-slide-up space-y-6">
+              <div className="rounded-lg border-destructive/50 border p-4 text-destructive">
+                If you haven't worked remotely in the past tax year, you are not eligible for Ireland's Remote Working tax relief.
+              </div>
+              
+              <div className="flex justify-end">
+                <Button 
+                  type="button" 
+                  onClick={handleStartOver}
+                  variant="outline"
+                >
+                  Start Over
+                </Button>
+              </div>
+            </div>
+          )}
+
           {formData.workedFromHome && (
             <div className="space-y-6 pt-4 animate-slide-up">
               <div className="border-b border-border pb-6">
@@ -221,7 +243,7 @@ const WorkFromHome = () => {
                           type="number"
                           min="0"
                           max="5"
-                          step="0.5" // Allow increments of 0.5 for half days
+                          step="0.5"
                           value={remoteDaysPerWeek}
                           onChange={handleRemoteDaysPerWeekChange}
                           className="w-full"
@@ -261,6 +283,7 @@ const WorkFromHome = () => {
               type="submit" 
               size="lg" 
               className="transition-all duration-300 w-full sm:w-auto"
+              disabled={formData.workedFromHome === false}
             >
               Continue to Costs
             </Button>
