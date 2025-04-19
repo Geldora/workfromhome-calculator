@@ -34,7 +34,7 @@ const ResultCard = ({ result, formatCurrency }: ResultCardProps) => {
   return (
     <Card className="overflow-hidden border-2 border-primary/50 bg-primary/5">
       <div className="bg-primary py-2 px-4 border-b text-xs font-mono text-primary-foreground flex items-center justify-between">
-        <span>CALCULATION RESULT</span>
+        <span>Remote working relief calculation result</span>
         <Button 
           variant="ghost" 
           size="icon" 
@@ -47,13 +47,13 @@ const ResultCard = ({ result, formatCurrency }: ResultCardProps) => {
       </div>
       <div className="p-6 space-y-2">
         <h4 className="text-sm font-medium text-muted-foreground">
-          ((Electricity + Internet + Heating) × Working Days) ÷ Total Days in the year - Remote Allowance) × 30%
+          ((Electricity + Internet + Heating) × Remote Working Days) ÷ Total Days in the year - Remote Allowance) × 30%
         </h4>
         <p className="text-2xl font-medium">
           {formatCurrency(result)}
         </p>
         <p className="text-sm text-muted-foreground">
-          Calculated tax deduction
+          Calculated allowable costs
         </p>
       </div>
     </Card>
