@@ -15,7 +15,7 @@ if (!rootElement) {
   window.addEventListener('load', () => {
     // Load analytics after the app is fully loaded
     import('./utils/analytics').then(({ initializeGoogleAnalytics }) => {
-      initializeGoogleAnalytics('G-L2XR7H3WMY'); // Updated with a real GA4 ID format
+      initializeGoogleAnalytics('G-KPD1NVDHND'); // Updated with the new GA4 ID
     }).catch(err => {
       console.error('Failed to load analytics:', err);
     });
