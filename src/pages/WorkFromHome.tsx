@@ -118,7 +118,7 @@ const WorkFromHome = () => {
       <div className="space-y-12">
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-4">
-            <h3 className="text-xl font-medium">Did you work from home in the past tax year?</h3>
+            <h2 className="text-xl font-medium">Did you work from home in the past tax year?</h2>
             
             <RadioGroup 
               value={formData.workedFromHome === null ? undefined : formData.workedFromHome.toString()} 
