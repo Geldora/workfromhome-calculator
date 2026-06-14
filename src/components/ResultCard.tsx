@@ -40,15 +40,15 @@ const ResultCard = ({ result, formatCurrency }: ResultCardProps) => {
           size="icon" 
           className="h-5 w-5" 
           onClick={copyToClipboard}
-          title="Copy result to clipboard"
+          aria-label="Copy result to clipboard"
         >
           {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
         </Button>
       </div>
       <div className="p-6 space-y-2">
-        <h4 className="text-sm font-medium text-muted-foreground">
+        <h3 className="text-sm font-medium text-muted-foreground">
           ((Electricity + Internet + Heating) × Remote Working Days) ÷ Total Days in the year - Remote Allowance) × 30%
-        </h4>
+        </h3>
         <p className="text-2xl font-medium">
           {formatCurrency(result)}
         </p>
